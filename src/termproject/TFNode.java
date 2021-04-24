@@ -48,6 +48,7 @@ public class TFNode {
     public Item getItem(int index) {
         if ( (index < 0) || (index > (numItems-1) ) )
             throw new TFNodeException();
+
         return nodeItems[index];
     }
         // adds, but does not extend array; so it overwrites anything there
@@ -55,6 +56,7 @@ public class TFNode {
             // always add at end+1; check that you are within array
         if ( (index < 0) || (index > numItems) || (index > MAX_ITEMS) )
             throw new TFNodeException();
+            
         nodeItems[index] = data;
         numItems++;
     }
@@ -73,7 +75,7 @@ public class TFNode {
             // pointers 1 and 2 to point to 1; this is because whoever called
             // this function will fix one of them later; index 0 doesn't change;
             // pointer 3 becomes pointer 2; pointer 4 becomes 3, etc.
-        for (int ind=numItems+1; ind > index; ind--) {
+        for ( int ind = numItems + 1; ind > index; ind-- ) {
             nodeChildren[ind] = nodeChildren[ind-1];
         }
 
