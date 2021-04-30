@@ -41,7 +41,8 @@ public class TwoFourTree
      * @return object corresponding to key; null if not found
      */
     public Object findElement(Object key) {
-        if( !treeComp.isComparable(key) ) {
+        // Checks for a valid key
+        if( !treeComp.isComparable( key )) {
             //throw exception
         }
 
@@ -50,22 +51,22 @@ public class TwoFourTree
             return null;
         }
 
-        TFNode activeNode = root();
-        int activeIndex = FFGTET( activeNode, key );
-        Item activeItem = activeNode.getItem( activeIndex );
+        // Active node is the only node of the tree the element could be in
+        TFNode activeNode = FFGTET( root(), key );
 
-        while( activeItem.key() != key ) {
-            if( activeNode.getChild(activeIndex) instanceof TFNode ) {
-                activeNode = activeNode.getChild( activeIndex );
-                activeIndex = FFGTET( activeNode, key );
-                activeItem = activeNode.getItem( activeIndex );
-            }
-            else {
-                return null;
+        // Loop to search through each item in the node
+        for( int i = 0; i < activeNode.getNumItems(); i++ ) {
+            // Current item in the node
+            Item activeItem = activeNode.getItem( i );
+
+            // If the keys are equal, return that element
+            if(treeComp.isEqual( activeItem.key(), key )) {
+                return activeItem.element();
             }
         }
 
-        return activeItem.element();
+        // If matching keys were not found in that node, it's not in the tree
+        return null;
     }
 
     /**
