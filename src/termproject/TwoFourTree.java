@@ -84,8 +84,6 @@ public class TwoFourTree implements Dictionary {
             setRoot( newNode );
             return;
         }
-
-        TFNode insertNode = root();
 		
 		TFNode insertNode = FFGTET( root(), key );
 		
