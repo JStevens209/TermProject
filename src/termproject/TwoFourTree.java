@@ -39,14 +39,15 @@ public class TwoFourTree implements Dictionary {
      * @param key to be searched for
      * @return object corresponding to key; null if not found
      */
-    public Object findElement(Object key) {
+    public Object findElement(Object key) throws InvalidIntegerException {
         // Checks for a valid key
         if( !treeComp.isComparable( key )) {
-            //throw new InvalidIntegerException();
+            throw new InvalidIntegerException( "Key incomparable to data in Tree." );
         }
 
         // If the tree is empty the element is not in the tree
         if( isEmpty() ) {
+			System.out.println( "Tree empty" );
             return null;
         }
 
@@ -77,6 +78,7 @@ public class TwoFourTree implements Dictionary {
 
         Item newItem = new Item( key, element );
 
+		// Root is uninitialized after construction. If there is no root, set the new element as the root.
         if( root() == null ) {
             TFNode newNode = new TFNode();
             newNode.addItem( 0, newItem );
@@ -87,21 +89,25 @@ public class TwoFourTree implements Dictionary {
 		
 		TFNode insertNode = FFGTET( root(), key );
 		
-		for( int i = 0; i < insertNode.getMaxItems(); i++ ) {
-			if( treeComp.isLessThan(key, insertNode.getItem( i ) )) {
+		// Searches for the correct index of the Item in the Node
+		for( int i = 0; i < insertNode.getNumItems(); i++ ) {
+			if( treeComp.isLessThan(key, insertNode.getItem( i ).key() )) {
 				insertNode.insertItem( i, newItem );
 				break;
 			}
 
-			else if( i == ( insertNode.getMaxItems() - 1 ) ) {
-				insertNode.insertItem( i + 1 , newItem);
+			else if( i == ( insertNode.getNumItems() - 1 ) ) {
+				insertNode.insertItem( i + 1, newItem);
+				break;
 			}
 		}
 		
-		if( insertNode.getNumItems() > 3 ) {
+		// If the Node is overflowing, expand the tree upwards.
+		if( insertNode.getNumItems() > insertNode.getMaxItems() ) {
 			expandTree( insertNode );
 		}
        
+		size++;
     }
 
     /**
@@ -116,9 +122,24 @@ public class TwoFourTree implements Dictionary {
     }
 
     public static void main(String[] args) {
+		
+		
+		
         Comparator myComp = new IntegerComparator();
+		
+		TwoFourTree findTree = new TwoFourTree( myComp );
         TwoFourTree myTree = new TwoFourTree(myComp);
 
+		// Tests findElement function, Works
+		findTree.insertElement(1, 1);
+		findTree.insertElement(2, 2);
+		findTree.insertElement(3, 3);
+		findTree.insertElement(5, 6);
+		
+		System.out.println( findTree.findElement( 5 ) + ": \n");
+		
+		
+		// Tests insertion
         Integer myInt1 = 47;
         myTree.insertElement(myInt1, myInt1);
         Integer myInt2 = 83;
@@ -166,23 +187,10 @@ public class TwoFourTree implements Dictionary {
 
         for (int i = 0; i < TEST_SIZE; i++) {
             myTree.insertElement(i, i);
-            //          myTree.printAllElements();
-            //         myTree.checkTree();
+            myTree.printAllElements();
+            myTree.checkTree();
         }
-		
-
-        System.out.println("removing");
-
-        for (int i = 0; i < TEST_SIZE; i++) {
-            int out = (Integer) myTree.removeElement(i);
-            if (out != i) {
-                throw new TwoFourTreeException("main: wrong element removed");
-            }
-            if (i > TEST_SIZE - 15) {
-                myTree.printAllElements();
-            }
-        }
-        System.out.println("done");
+	
     }
 
     public void printAllElements() {
@@ -322,44 +330,51 @@ public class TwoFourTree implements Dictionary {
 		
 		TFNode parent = overflow.getParent();
 		
+		// If the overflowing Node is root, create a new root Node above it.
 		if( parent == null ) {
 			parent = new TFNode();
 			setRoot( parent );
 		}
 		
+		// Get the item that will be put in the parent Node
 		Item parentItem = overflow.removeItem(2);
 		int parentItemIndex = 0;
 		
+		// Insert the first two elements into the left Node
 		left.insertItem(0, overflow.removeItem(0) );
 		left.insertItem(1, overflow.removeItem(0) );
 		left.setParent( parent );
 		
+		// Insert the last element into the right Node
 		right.insertItem(0, overflow.removeItem(0) );
-
 		right.setParent( parent );
 		
+		
+		// Set the third item in its place in the parent Node.
 		if( parent.getNumItems() == 0 ) {
 			parent.insertItem( 0, parentItem );
 		}
 		
 		for( int i = 0; i < parent.getNumItems(); i++ ) {
+			
 			if( treeComp.isLessThan( parentItem.key(), parent.getItem( i ).key() )) {
 
 				parent.insertItem( i, parentItem );
 				parentItemIndex = i;
 				break;
 			}
-			else if( i == ( parent.getMaxItems() - 1 ) ) {
+			else if( i == ( parent.getNumItems() - 1 ) ) {
 				parent.insertItem( i + 1 , parentItem );
 				parentItemIndex = i + 1;
 				break;
 			}
 		}
 		
-		
+		// Set the child pointers
 		parent.setChild( parentItemIndex, left );
 		parent.setChild( parentItemIndex + 1, right );
 		
+		// If the parent has now overflowed because of the expansion, recursively call expandTree on the parent.
 		if( parent.getNumItems() > 3 ) {
 			expandTree( parent );
 		}

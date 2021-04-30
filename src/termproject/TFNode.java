@@ -65,7 +65,8 @@ public class TFNode {
     public void insertItem (int index, Item data) {
         if ( (index < 0) || (index > numItems) || (index > MAX_ITEMS) )
             throw new TFNodeException( "" + index );
-            // adjust Items
+            
+		// adjust Items	
         for (int ind=numItems; ind > index; ind--) {
 			
             nodeItems[ind] = nodeItems[ind-1];
