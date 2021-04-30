@@ -47,7 +47,7 @@ public class TFNode {
     }
     public Item getItem(int index) {
         if ( (index < 0) || (index > (numItems-1) ) )
-            throw new TFNodeException();
+            throw new TFNodeException( "Index out of Range: " + index );
 
         return nodeItems[index];
     }
@@ -64,9 +64,10 @@ public class TFNode {
         // pointers to add the proper corresponding pointer
     public void insertItem (int index, Item data) {
         if ( (index < 0) || (index > numItems) || (index > MAX_ITEMS) )
-            throw new TFNodeException();
+            throw new TFNodeException( "" + index );
             // adjust Items
         for (int ind=numItems; ind > index; ind--) {
+			
             nodeItems[ind] = nodeItems[ind-1];
         }
             // insert new data into hole made
@@ -85,7 +86,7 @@ public class TFNode {
         // this method removes item, and shrinks array
     public Item removeItem (int index) {
         if ( (index < 0) || (index > (numItems-1) ) )
-            throw new TFNodeException();
+            throw new TFNodeException( "Index:" + index );
         Item removedItem = nodeItems[index];
 
         for (int ind=index; ind < numItems-1; ind++) {
@@ -127,7 +128,7 @@ public class TFNode {
 
     public TFNode getChild (int index) {
         if ( (index < 0) || (index > (MAX_ITEMS+1)) )
-            throw new TFNodeException();
+            throw new TFNodeException( "Index:" + index );
         return nodeChildren[index];
     }
     public void setChild (int index, TFNode child) {

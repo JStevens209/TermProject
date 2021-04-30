@@ -84,22 +84,21 @@ public class TwoFourTree implements Dictionary {
             setRoot( newNode );
             return;
         }
-
-        TFNode insertNode = root();
 		
 		TFNode insertNode = FFGTET( root(), key );
 		
-		for( int i = 0; i < insertNode.getMaxItems(); i++ ) {
-			if( treeComp.isLessThan(key, insertNode.getItem( i ) )) {
+		for( int i = 0; i < insertNode.getNumItems(); i++ ) {
+			if( treeComp.isLessThanOrEqualTo(key, insertNode.getItem( i ).key() )) {
 				insertNode.insertItem( i, newItem );
 				break;
 			}
-			else if( i == ( insertNode.getMaxItems() - 1 ) ) {
-				insertNode.insertItem( i + 1 , newItem);
+			else if( i == ( insertNode.getNumItems() - 1 ) ) {
+				insertNode.insertItem( i , newItem);
+				break;
 			}
 		}
 		
-		if( insertNode.getNumItems() > 3 ) {
+		if( insertNode.getNumItems() > insertNode.getMaxItems() ) {
 			expandTree( insertNode );
 		}
        
@@ -171,6 +170,8 @@ public class TwoFourTree implements Dictionary {
             //         myTree.checkTree();
         }
         System.out.println("removing");
+		
+		/*
         for (int i = 0; i < TEST_SIZE; i++) {
             int out = (Integer) myTree.removeElement(i);
             if (out != i) {
@@ -180,6 +181,7 @@ public class TwoFourTree implements Dictionary {
                 myTree.printAllElements();
             }
         }
+	*/
         System.out.println("done");
     }
 
@@ -295,7 +297,7 @@ public class TwoFourTree implements Dictionary {
 				break;
 			}
 			else if( treeComp.isLessThan(key, item.key() )) {
-				TFNode returnedNode = FFGTET( activeNode.getChild( i - 1 ), key );
+				TFNode returnedNode = FFGTET( activeNode.getChild( i ), key );
 				
 				if( returnedNode != null ) {
 					activeNode = returnedNode;
@@ -320,19 +322,19 @@ public class TwoFourTree implements Dictionary {
 		int parentItemIndex = 0;
 		
 		right.insertItem(0, overflow.removeItem(0) );
-		right.insertItem(1, overflow.removeItem(1) );
+		right.insertItem(1, overflow.removeItem(0) );
 		right.setParent( parent );
 		
-		left.insertItem(3, overflow.removeItem(3) );
+		left.insertItem(0, overflow.removeItem(0) );
 		left.setParent( parent );
 		
-		for( int i = 0; i < parent.getMaxItems(); i++ ) {
-			if( treeComp.isLessThan( parentItem, parent.getItem( i ) )) {
+		for( int i = 0; i < parent.getNumItems(); i++ ) {
+			if( treeComp.isLessThan( parentItem, parent.getItem( i ).key() )) {
 				parent.insertItem( i, parentItem );
 				parentItemIndex = i;
 				break;
 			}
-			else if( i == ( parent.getMaxItems() - 1 ) ) {
+			else if( i == ( parent.getNumItems() - 1 ) ) {
 				parent.insertItem( i + 1 , parentItem );
 				parentItemIndex = i + 1;
 				break;
