@@ -5,11 +5,10 @@ package termproject;
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:
- * @author
+ * @author   David Cox and Joshua Stevens
  * @version 1.0
  */
-public class TwoFourTree
-        implements Dictionary {
+public class TwoFourTree implements Dictionary {
 
     private Comparator treeComp;
     private int size = 0;
@@ -87,7 +86,7 @@ public class TwoFourTree
         }
 
         TFNode insertNode = root();
-        int insertIndex = FFGTET( root(), key );
+
        
     }
 
@@ -112,52 +111,36 @@ public class TwoFourTree
         myTree.insertElement(myInt2, myInt2);
         Integer myInt3 = 22;
         myTree.insertElement(myInt3, myInt3);
-
         Integer myInt4 = 16;
         myTree.insertElement(myInt4, myInt4);
-
         Integer myInt5 = 49;
         myTree.insertElement(myInt5, myInt5);
-
         Integer myInt6 = 100;
         myTree.insertElement(myInt6, myInt6);
-
         Integer myInt7 = 38;
         myTree.insertElement(myInt7, myInt7);
-
         Integer myInt8 = 3;
         myTree.insertElement(myInt8, myInt8);
-
         Integer myInt9 = 53;
         myTree.insertElement(myInt9, myInt9);
-
         Integer myInt10 = 66;
         myTree.insertElement(myInt10, myInt10);
-
         Integer myInt11 = 19;
         myTree.insertElement(myInt11, myInt11);
-
         Integer myInt12 = 23;
         myTree.insertElement(myInt12, myInt12);
-
         Integer myInt13 = 24;
         myTree.insertElement(myInt13, myInt13);
-
         Integer myInt14 = 88;
         myTree.insertElement(myInt14, myInt14);
-
         Integer myInt15 = 1;
         myTree.insertElement(myInt15, myInt15);
-
         Integer myInt16 = 97;
         myTree.insertElement(myInt16, myInt16);
-
         Integer myInt17 = 94;
         myTree.insertElement(myInt17, myInt17);
-
         Integer myInt18 = 35;
         myTree.insertElement(myInt18, myInt18);
-
         Integer myInt19 = 51;
         myTree.insertElement(myInt19, myInt19);
 
@@ -166,7 +149,6 @@ public class TwoFourTree
 
         myTree = new TwoFourTree(myComp);
         final int TEST_SIZE = 10000;
-
 
         for (int i = 0; i < TEST_SIZE; i++) {
             myTree.insertElement(i, i);
@@ -262,7 +244,6 @@ public class TwoFourTree
                         }
                     }
                 }
-
             }
         }
 
@@ -270,33 +251,7 @@ public class TwoFourTree
         for (int childIndex = 0; childIndex < numChildren; childIndex++) {
             checkTreeFromNode(start.getChild(childIndex));
         }
-
     }
-
-	/*
-    private int FFGTET( TFNode activeNode, Object key ) {
-		
-        // If nothing is in the node, index 0 is greater
-        if( activeNode.getNumItems() == 0) {
-            return 0;
-        }
-
-        // Loop to search through each item in the node
-        for( int i = 0; i < activeNode.getNumItems(); i++ ) {
-            Item item = activeNode.getItem( i );
-            // If an items key is greater or larger, return that index
-            if( treeComp.isGreaterThanOrEqualTo( key, item.key() )) {
-                return i;
-            }
-        }
-
-        // If nothing in the tree is larger, return the last index
-        return activeNode.getNumItems();
-    }
-	*/
-
-    // MAJOR CHANGE!
-    // This may need to return an index instead of a node
 
     // Find First Greater Than or Equal To
     private TFNode FFGTET( TFNode activeNode, Object key ) {
@@ -332,7 +287,6 @@ public class TwoFourTree
 				}
 			}
 		}
-
 
 		return activeNode;
 	}
