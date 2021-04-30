@@ -42,7 +42,7 @@ public class TwoFourTree implements Dictionary {
     public Object findElement(Object key) {
         // Checks for a valid key
         if( !treeComp.isComparable( key )) {
-            //throw exception
+            //throw new InvalidIntegerException();
         }
 
         // If the tree is empty the element is not in the tree
@@ -87,18 +87,18 @@ public class TwoFourTree implements Dictionary {
 		
 		TFNode insertNode = FFGTET( root(), key );
 		
-		for( int i = 0; i < insertNode.getNumItems(); i++ ) {
-			if( treeComp.isLessThanOrEqualTo(key, insertNode.getItem( i ).key() )) {
+		for( int i = 0; i < insertNode.getMaxItems(); i++ ) {
+			if( treeComp.isLessThan(key, insertNode.getItem( i ) )) {
 				insertNode.insertItem( i, newItem );
 				break;
 			}
-			else if( i == ( insertNode.getNumItems() - 1 ) ) {
+
+			else if( i == ( insertNode.getMaxItems() - 1 ) ) {
 				insertNode.insertItem( i+1 , newItem);
-				break;
 			}
 		}
 		
-		if( insertNode.getNumItems() > insertNode.getMaxItems() ) {
+		if( insertNode.getNumItems() > 3 ) {
 			expandTree( insertNode );
 		}
        
@@ -169,10 +169,10 @@ public class TwoFourTree implements Dictionary {
             //          myTree.printAllElements();
             //         myTree.checkTree();
         }
-        System.out.println("Printing");
-		myTree.printAllElements();
 		
-		/*
+
+        System.out.println("removing");
+
         for (int i = 0; i < TEST_SIZE; i++) {
             int out = (Integer) myTree.removeElement(i);
             if (out != i) {
@@ -182,7 +182,6 @@ public class TwoFourTree implements Dictionary {
                 myTree.printAllElements();
             }
         }
-	*/
         System.out.println("done");
     }
 
@@ -271,12 +270,17 @@ public class TwoFourTree implements Dictionary {
         }
     }
 
-    // Find First Greater Than or Equal To
+    // Find Final Greater Than or Equal To
+    // This helper method returns the node that contains a key still greater
+    // than the given key, but closest in value to the value of the given key.
+    // If the method finds a node with a key equal to the given key, it returns
+    // that node instead as equal to is as close as it can be.
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-		
+        // If the given node is null, return null
 		if( activeNode == null ) {
 			return null;
 		}
+		// If the given node has no items, that is the only node to return
 		if( activeNode.getNumItems() == 0 ) {
 			return activeNode;
 		}
@@ -285,24 +289,27 @@ public class TwoFourTree implements Dictionary {
 		for( int i = 0; i < activeNode.getNumItems(); i++ ) {
 			Item item = activeNode.getItem( i );
 
+			// If it finds a key with equal value, break to return this node
 			if( treeComp.isEqual( key, item.key() )) {
+                break;
+            }
+			// If the node item is greater than the key, need to look at its child
+			else if( treeComp.isGreaterThan( item.key(), key )) {
+			    if( activeNode.getChild( i ) instanceof TFNode ) {
+                    activeNode = FFGTET(activeNode.getChild( i ), key);
+                }
 				break;
 			}
-			// If it's less than should just continue until the first greater than
-			else if( treeComp.isGreaterThan( key, item.key() )) {
-				TFNode returnedNode = FFGTET( activeNode.getChild( i ), key );
-				
-				if( returnedNode != null ) {
-					activeNode = returnedNode;
-				}
-				break;
-			}
-			else if( treeComp.isLessThan(key, item.key() )) {
-				TFNode returnedNode = FFGTET( activeNode.getChild( i ), key );
-				
-				if( returnedNode != null ) {
-					activeNode = returnedNode;
-				}
+			// Usually this case doesn't matter, only if on the last item
+			else if( treeComp.isLessThan( item.key(), key )) {
+			    // If i is equal to 1 less than the number of items, the last
+                // item has been searched and the node doesn't have any items
+                // greater. So need to go to the last child.
+			    if( i == ( activeNode.getNumItems() - 1 )) {
+                    if( activeNode.getChild( i + 1 ) instanceof TFNode ) {
+                        activeNode = FFGTET(activeNode.getChild( i + 1 ), key);
+                    }
+                }
 			}
 		}
 
@@ -328,6 +335,7 @@ public class TwoFourTree implements Dictionary {
 		left.setParent( parent );
 		
 		right.insertItem(0, overflow.removeItem(0) );
+<<<<<<< HEAD
 		right.setParent( parent );
 		
 		if( parent.getNumItems() == 0 ) {
@@ -336,11 +344,21 @@ public class TwoFourTree implements Dictionary {
 		
 		for( int i = 0; i < parent.getNumItems(); i++ ) {
 			if( treeComp.isLessThan( parentItem.key(), parent.getItem( i ).key() )) {
+=======
+		right.insertItem(1, overflow.removeItem(1) );
+		right.setParent( parent );
+		
+		left.insertItem(3, overflow.removeItem(3) );
+		left.setParent( parent );
+		
+		for( int i = 0; i < parent.getMaxItems(); i++ ) {
+			if( treeComp.isLessThan( parentItem, parent.getItem( i ) )) {
+>>>>>>> 4fa7c0a436635439dbb20b7f133d545166907c8c
 				parent.insertItem( i, parentItem );
 				parentItemIndex = i;
 				break;
 			}
-			else if( i == ( parent.getNumItems() - 1 ) ) {
+			else if( i == ( parent.getMaxItems() - 1 ) ) {
 				parent.insertItem( i + 1 , parentItem );
 				parentItemIndex = i + 1;
 				break;
