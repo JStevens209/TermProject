@@ -266,15 +266,17 @@ public class TwoFourTree implements Dictionary {
         }
     }
 
-    // This helper method returns the node that contains a key greater or equal
-    // to given key, but still closest to the value of the given key. This means
-    // it will walk down the tree to the nodes with the closest value unless it
-    // finds a key of equal value, in which case it returns that node.
+    // Find Final Greater Than or Equal To
+    // This helper method returns the node that contains a key still greater
+    // than the given key, but closest in value to the value of the given key.
+    // If the method finds a node with a key equal to the given key, it returns
+    // that node instead as equal to is as close as it can be.
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-
+        // If the given node is null, return null
 		if( activeNode == null ) {
 			return null;
 		}
+		// If the given node has no items, that is the only node to return
 		if( activeNode.getNumItems() == 0 ) {
 			return activeNode;
 		}
@@ -283,24 +285,27 @@ public class TwoFourTree implements Dictionary {
 		for( int i = 0; i < activeNode.getNumItems(); i++ ) {
 			Item item = activeNode.getItem( i );
 
+			// If it finds a key with equal value, break to return this node
 			if( treeComp.isEqual( key, item.key() )) {
+                break;
+            }
+			// If the node item is greater than the key, need to look at its child
+			else if( treeComp.isGreaterThan( item.key(), key )) {
+			    if( activeNode.getChild( i ) instanceof TFNode ) {
+                    activeNode = FFGTET(activeNode.getChild( i ), key);
+                }
 				break;
 			}
-			// If it's less than should just continue until the first greater than
-			else if( treeComp.isGreaterThan( key, item.key() )) {
-				TFNode returnedNode = FFGTET( activeNode.getChild( i ), key );
-				
-				if( returnedNode != null ) {
-					activeNode = returnedNode;
-				}
-				break;
-			}
-			else if( treeComp.isLessThan(key, item.key() )) {
-				TFNode returnedNode = FFGTET( activeNode.getChild( i - 1 ), key );
-				
-				if( returnedNode != null ) {
-					activeNode = returnedNode;
-				}
+			// Usually this case doesn't matter, only if on the last item
+			else if( treeComp.isLessThan( item.key(), key )) {
+			    // If i is equal to 1 less than the number of items, the last
+                // item has been searched and the node doesn't have any items
+                // greater. So need to go to the last child.
+			    if( i == ( activeNode.getNumItems() - 1 )) {
+                    if( activeNode.getChild( i + 1 ) instanceof TFNode ) {
+                        activeNode = FFGTET(activeNode.getChild( i + 1 ), key);
+                    }
+                }
 			}
 		}
 
