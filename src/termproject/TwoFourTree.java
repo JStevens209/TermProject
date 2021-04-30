@@ -323,6 +323,13 @@ public class TwoFourTree
 				}
 				break;
 			}
+			else if( treeComp.isLessThan(key, item.key() )) {
+				TFNode returnedNode = FFGTET( activeNode.getChild( i - 1 ), key );
+				
+				if( returnedNode != null ) {
+					activeNode = returnedNode;
+				}
+			}
 		}
 
 
