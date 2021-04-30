@@ -42,7 +42,7 @@ public class TwoFourTree implements Dictionary {
     public Object findElement(Object key) {
         // Checks for a valid key
         if( !treeComp.isComparable( key )) {
-            //throw exception
+            //throw new InvalidIntegerException();
         }
 
         // If the tree is empty the element is not in the tree
@@ -253,9 +253,12 @@ public class TwoFourTree implements Dictionary {
         }
     }
 
-    // Find First Greater Than or Equal To
+    // This helper method returns the node that contains a key greater or equal
+    // to given key, but still closest to the value of the given key. This means
+    // it will walk down the tree to the nodes with the closest value unless it
+    // finds a key of equal value, in which case it returns that node.
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-		
+
 		if( activeNode == null ) {
 			return null;
 		}
