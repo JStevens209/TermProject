@@ -41,7 +41,15 @@ public class TwoFourTree
      * @return object corresponding to key; null if not found
      */
     public Object findElement(Object key) {
-        return null;
+        Item foundItem;
+        TFNode activeNode = root();
+        // Item activeItem = activeNode.getItem(0);
+
+        while( FFGTET( activeNode, key ) != null ) {
+            activeNode =
+        }
+
+        return foundItem.key();
     }
 
     /**
@@ -50,36 +58,36 @@ public class TwoFourTree
      * @param element to be inserted
      */
     public void insertElement(Object key, Object element) {
-		
-		Item newItem = new Item( key, element );
-		
-		if( root() == null ) {
-			TFNode newNode = new TFNode();
-			newNode.addItem( 0, newItem );
-			
-			setRoot( newNode );
-			return;
-		}
-		
-		TFNode insertLocation = FFGTET( root(), key );
-		
-		if( insertLocation.getMaxItems() <= insertLocation.getNumItems() ) {
-			for( int i = 0; i < insertLocation.getNumItems(); i++ ) {
-				Item item = insertLocation.getItem( i );
 
-				if( treeComp.isEqual( key, item.key() )) {
-					
-				}
-				else if( treeComp.isLessThan( key, item.key() )) {
-					
-				}
-				else if( treeComp.isGreaterThan( key, item.key() )) {
-					
-				}
-			}
-		}
-		
-		
+        Item newItem = new Item( key, element );
+
+        if( root() == null ) {
+            TFNode newNode = new TFNode();
+            newNode.addItem( 0, newItem );
+
+            setRoot( newNode );
+            return;
+        }
+
+        TFNode insertLocation = FFGTET( root(), key );
+
+        if( insertLocation.getMaxItems() <= insertLocation.getNumItems() ) {
+            for( int i = 0; i < insertLocation.getNumItems(); i++ ) {
+                Item item = insertLocation.getItem( i );
+
+                if( treeComp.isEqual( key, item.key() )) {
+
+                }
+                else if( treeComp.isLessThan( key, item.key() )) {
+
+                }
+                else if( treeComp.isGreaterThan( key, item.key() )) {
+
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -264,29 +272,46 @@ public class TwoFourTree
 
     }
 
+    /* MAJOR CHANGE!
+    This may need to return an index instead of a node
+    */
     // Find First Greater Than or Equal To
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-		
-		if( activeNode.getNumItems() == 0 ) {
-			return activeNode;
-		}
-		
+        if( activeNode.getNumItems() == 0 ) {
+            return activeNode;
+        }
+
+        // Boolean for the case of the loop not finding anything
+        Boolean foundItem = false;
+
+        // For loop looks for something in the node greater than the key
         for( int i = 0; i < activeNode.getNumItems(); i++ ) {
             Item item = activeNode.getItem( i );
 
             if( treeComp.isEqual( key, item.key() )) {
+                foundItem = true;
                 break;
             }
-            else if( treeComp.isLessThan( key, item.key() )) {
-                activeNode = FFGTET( activeNode.getChild( i ), key); 
-				break;
-            }
+            // If it's less than should just continue until the first greater than
             else if( treeComp.isGreaterThan( key, item.key() )) {
-                activeNode = FFGTET( activeNode.getChild( i + 1 ), key );
-				break;
+                foundItem = true;
+                activeNode = FFGTET( activeNode.getChild( i ), key );
+                break;
             }
         }
-		
-		return activeNode;
+        // If the for loop doesn't find something larger in the node, need to go
+        // to the very last child, which is the number of items in the node.
+        if(!foundItem) {
+            if( activeNode.getChild( activeNode.getNumItems() ) instanceof TFNode) {
+                activeNode = FFGTET( activeNode.getChild( activeNode.getNumItems() ), key );
+            }
+            // I'm not sure, but I'm guessing if nothing in the tree is larger
+            // need to return null.
+            else {
+                return null;
+            }
+        }
+
+        return activeNode;
     }
 }
