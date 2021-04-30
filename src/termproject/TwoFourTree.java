@@ -87,29 +87,7 @@ public class TwoFourTree
 
         TFNode insertNode = root();
         int insertIndex = FFGTET( root(), key );
-        while( insertNode.getChild(0) instanceof TFNode) {
-
-        }
-
-        /*
-	TFNode insertLocation = FFGTET( root(), key );
-
-		if( insertLocation.getMaxItems() <= insertLocation.getNumItems() ) {
-			for( int i = 0; i < insertLocation.getNumItems(); i++ ) {
-				Item item = insertLocation.getItem( i );
-
-				if( treeComp.isEqual( key, item.key() )) {
-
-				}
-				else if( treeComp.isLessThan( key, item.key() )) {
-
-				}
-				else if( treeComp.isGreaterThan( key, item.key() )) {
-
-				}
-			}
-	}
-	*/
+       
     }
 
     /**
@@ -294,8 +272,9 @@ public class TwoFourTree
 
     }
 
-
+	/*
     private int FFGTET( TFNode activeNode, Object key ) {
+		
         // If nothing is in the node, index 0 is greater
         if( activeNode.getNumItems() == 0) {
             return 0;
@@ -313,48 +292,40 @@ public class TwoFourTree
         // If nothing in the tree is larger, return the last index
         return activeNode.getNumItems();
     }
+	*/
 
-    /* MAJOR CHANGE!
-    This may need to return an index instead of a node
+    // MAJOR CHANGE!
+    // This may need to return an index instead of a node
 
     // Find First Greater Than or Equal To
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-	if( activeNode.getNumItems() == 0 ) {
-            return activeNode;
-        }
+		
+		if( activeNode == null ) {
+			return null;
+		}
+		if( activeNode.getNumItems() == 0 ) {
+			return activeNode;
+		}
 
-        // Boolean for the case of the loop not finding anything
-        Boolean foundItem = false;
+		// For loop looks for something in the node greater than the key
+		for( int i = 0; i < activeNode.getNumItems(); i++ ) {
+			Item item = activeNode.getItem( i );
 
-        // For loop looks for something in the node greater than the key
-        for( int i = 0; i < activeNode.getNumItems(); i++ ) {
-            Item item = activeNode.getItem( i );
+			if( treeComp.isEqual( key, item.key() )) {
+				break;
+			}
+			// If it's less than should just continue until the first greater than
+			else if( treeComp.isGreaterThan( key, item.key() )) {
+				TFNode returnedNode = FFGTET( activeNode.getChild( i ), key );
+				
+				if( returnedNode != null ) {
+					activeNode = returnedNode;
+				}
+				break;
+			}
+		}
 
-            if( treeComp.isEqual( key, item.key() )) {
-                foundItem = true;
-                break;
-            }
-            // If it's less than should just continue until the first greater than
-            else if( treeComp.isGreaterThan( key, item.key() )) {
-                foundItem = true;
-                activeNode = FFGTET( activeNode.getChild( i ), key );
-                break;
-            }
-        }
-        // If the for loop doesn't find something larger in the node, need to go
-        // to the very last child, which is the number of items in the node.
-        if(!foundItem) {
-            if( activeNode.getChild( activeNode.getNumItems() ) instanceof TFNode) {
-                activeNode = FFGTET( activeNode.getChild( activeNode.getNumItems() ), key );
-            }
-            // I'm not sure, but I'm guessing if nothing in the tree is larger
-            // need to return null.
-            else {
-                return null;
-            }
-        }
 
-	return activeNode;
-    }
-    */
+		return activeNode;
+	}
 }
