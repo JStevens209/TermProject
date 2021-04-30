@@ -93,7 +93,7 @@ public class TwoFourTree implements Dictionary {
 				break;
 			}
 			else if( i == ( insertNode.getNumItems() - 1 ) ) {
-				insertNode.insertItem( i , newItem);
+				insertNode.insertItem( i+1 , newItem);
 				break;
 			}
 		}
@@ -169,7 +169,8 @@ public class TwoFourTree implements Dictionary {
             //          myTree.printAllElements();
             //         myTree.checkTree();
         }
-        System.out.println("removing");
+        System.out.println("Printing");
+		myTree.printAllElements();
 		
 		/*
         for (int i = 0; i < TEST_SIZE; i++) {
@@ -316,20 +317,25 @@ public class TwoFourTree implements Dictionary {
 		
 		if( parent == null ) {
 			parent = new TFNode();
+			setRoot( parent );
 		}
 		
 		Item parentItem = overflow.removeItem(2);
 		int parentItemIndex = 0;
 		
-		right.insertItem(0, overflow.removeItem(0) );
-		right.insertItem(1, overflow.removeItem(0) );
-		right.setParent( parent );
-		
 		left.insertItem(0, overflow.removeItem(0) );
+		left.insertItem(1, overflow.removeItem(0) );
 		left.setParent( parent );
 		
+		right.insertItem(0, overflow.removeItem(0) );
+		right.setParent( parent );
+		
+		if( parent.getNumItems() == 0 ) {
+			parent.insertItem( 0, parentItem );
+		}
+		
 		for( int i = 0; i < parent.getNumItems(); i++ ) {
-			if( treeComp.isLessThan( parentItem, parent.getItem( i ).key() )) {
+			if( treeComp.isLessThan( parentItem.key(), parent.getItem( i ).key() )) {
 				parent.insertItem( i, parentItem );
 				parentItemIndex = i;
 				break;
@@ -341,8 +347,9 @@ public class TwoFourTree implements Dictionary {
 			}
 		}
 		
+		
 		parent.setChild( parentItemIndex, left );
-		parent.setChild( parentItemIndex, right );
+		parent.setChild( parentItemIndex + 1, right );
 		
 		if( parent.getNumItems() > 3 ) {
 			expandTree( parent );
