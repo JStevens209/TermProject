@@ -41,15 +41,31 @@ public class TwoFourTree
      * @return object corresponding to key; null if not found
      */
     public Object findElement(Object key) {
-        Item foundItem;
-        TFNode activeNode = root();
-        // Item activeItem = activeNode.getItem(0);
-
-        while( FFGTET( activeNode, key ) != null ) {
-            activeNode =
+        if( !treeComp.isComparable(key) ) {
+            //throw exception
         }
 
-        return foundItem.key();
+        // If the tree is empty the element is not in the tree
+        if( isEmpty() ) {
+            return null;
+        }
+
+        TFNode activeNode = root();
+        int activeIndex = FFGTET( activeNode, key );
+        Item activeItem = activeNode.getItem( activeIndex );
+
+        while( activeItem.key() != key ) {
+            if( activeNode.getChild(activeIndex) instanceof TFNode ) {
+                activeNode = activeNode.getChild( activeIndex );
+                activeIndex = FFGTET( activeNode, key );
+                activeItem = activeNode.getItem( activeIndex );
+            }
+            else {
+                return null;
+            }
+        }
+
+        return activeItem.element();
     }
 
     /**
@@ -69,25 +85,31 @@ public class TwoFourTree
             return;
         }
 
-        TFNode insertLocation = FFGTET( root(), key );
+        TFNode insertNode = root();
+        int insertIndex = FFGTET( root(), key );
+        while( insertNode.getChild(0) instanceof TFNode) {
 
-        if( insertLocation.getMaxItems() <= insertLocation.getNumItems() ) {
-            for( int i = 0; i < insertLocation.getNumItems(); i++ ) {
-                Item item = insertLocation.getItem( i );
-
-                if( treeComp.isEqual( key, item.key() )) {
-
-                }
-                else if( treeComp.isLessThan( key, item.key() )) {
-
-                }
-                else if( treeComp.isGreaterThan( key, item.key() )) {
-
-                }
-            }
         }
 
+        /*
+	TFNode insertLocation = FFGTET( root(), key );
 
+		if( insertLocation.getMaxItems() <= insertLocation.getNumItems() ) {
+			for( int i = 0; i < insertLocation.getNumItems(); i++ ) {
+				Item item = insertLocation.getItem( i );
+
+				if( treeComp.isEqual( key, item.key() )) {
+
+				}
+				else if( treeComp.isLessThan( key, item.key() )) {
+
+				}
+				else if( treeComp.isGreaterThan( key, item.key() )) {
+
+				}
+			}
+	}
+	*/
     }
 
     /**
@@ -272,12 +294,32 @@ public class TwoFourTree
 
     }
 
+
+    private int FFGTET( TFNode activeNode, Object key ) {
+        // If nothing is in the node, index 0 is greater
+        if( activeNode.getNumItems() == 0) {
+            return 0;
+        }
+
+        // Loop to search through each item in the node
+        for( int i = 0; i < activeNode.getNumItems(); i++ ) {
+            Item item = activeNode.getItem( i );
+            // If an items key is greater or larger, return that index
+            if( treeComp.isGreaterThanOrEqualTo( key, item.key() )) {
+                return i;
+            }
+        }
+
+        // If nothing in the tree is larger, return the last index
+        return activeNode.getNumItems();
+    }
+
     /* MAJOR CHANGE!
     This may need to return an index instead of a node
-    */
+
     // Find First Greater Than or Equal To
     private TFNode FFGTET( TFNode activeNode, Object key ) {
-        if( activeNode.getNumItems() == 0 ) {
+	if( activeNode.getNumItems() == 0 ) {
             return activeNode;
         }
 
@@ -312,6 +354,7 @@ public class TwoFourTree
             }
         }
 
-        return activeNode;
+	return activeNode;
     }
+    */
 }
