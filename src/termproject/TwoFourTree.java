@@ -94,7 +94,7 @@ public class TwoFourTree implements Dictionary {
 			}
 
 			else if( i == ( insertNode.getMaxItems() - 1 ) ) {
-				insertNode.insertItem( i+1 , newItem);
+				insertNode.insertItem( i + 1 , newItem);
 			}
 		}
 		
@@ -343,12 +343,13 @@ public class TwoFourTree implements Dictionary {
 		}
 		
 		for( int i = 0; i < parent.getNumItems(); i++ ) {
-			if( treeComp.isLessThan( parentItem, parent.getItem( i ) )) {
+			if( treeComp.isLessThan( parentItem.key(), parent.getItem( i ).key() )) {
+
 				parent.insertItem( i, parentItem );
 				parentItemIndex = i;
 				break;
 			}
-			else if( i == ( parent.getNumItems() - 1 ) ) {
+			else if( i == ( parent.getMaxItems() - 1 ) ) {
 				parent.insertItem( i + 1 , parentItem );
 				parentItemIndex = i + 1;
 				break;
