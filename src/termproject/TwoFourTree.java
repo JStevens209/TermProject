@@ -85,7 +85,8 @@ public class TwoFourTree implements Dictionary {
             return;
         }
 
-<<<<<<< HEAD
+        TFNode insertNode = root();
+		
 		TFNode insertNode = FFGTET( root(), key );
 		
 		for( int i = 0; i < insertNode.getMaxItems(); i++ ) {
@@ -99,12 +100,8 @@ public class TwoFourTree implements Dictionary {
 		}
 		
 		if( insertNode.getNumItems() > 3 ) {
-			
+			expandTree( insertNode );
 		}
-=======
-        TFNode insertNode = root();
-
->>>>>>> 88511a926fba14168fb09f647da21d816ae4a05b
        
     }
 
