@@ -85,8 +85,21 @@ public class TwoFourTree
             return;
         }
 
-        TFNode insertNode = root();
-        int insertIndex = FFGTET( root(), key );
+		TFNode insertNode = FFGTET( root(), key );
+		
+		for( int i = 0; i < insertNode.getMaxItems(); i++ ) {
+			if( treeComp.isLessThan(key, insertNode.getItem( i ) )) {
+				insertNode.insertItem( i, newItem );
+				break;
+			}
+			else if( i == ( insertNode.getMaxItems() - 1 ) ) {
+				insertNode.insertItem( i + 1 , newItem);
+			}
+		}
+		
+		if( insertNode.getNumItems() > 3 ) {
+			
+		}
        
     }
 
@@ -332,7 +345,47 @@ public class TwoFourTree
 			}
 		}
 
-
 		return activeNode;
+	}
+	
+	private void expandTree( TFNode overflow ) {
+		TFNode right = new TFNode();
+		TFNode left = new TFNode();
+		
+		TFNode parent = overflow.getParent();
+		
+		if( parent == null ) {
+			parent = new TFNode();
+		}
+		
+		Item parentItem = overflow.removeItem(2);
+		int parentItemIndex = 0;
+		
+		right.insertItem(0, overflow.removeItem(0) );
+		right.insertItem(1, overflow.removeItem(1) );
+		right.setParent( parent );
+		
+		left.insertItem(3, overflow.removeItem(3) );
+		left.setParent( parent );
+		
+		for( int i = 0; i < parent.getMaxItems(); i++ ) {
+			if( treeComp.isLessThan( parentItem, parent.getItem( i ) )) {
+				parent.insertItem( i, parentItem );
+				parentItemIndex = i;
+				break;
+			}
+			else if( i == ( parent.getMaxItems() - 1 ) ) {
+				parent.insertItem( i + 1 , parentItem );
+				parentItemIndex = i + 1;
+				break;
+			}
+		}
+		
+		parent.setChild( parentItemIndex, left );
+		parent.setChild( parentItemIndex, right );
+		
+		if( parent.getNumItems() > 3 ) {
+			expandTree( parent );
+		}
 	}
 }
